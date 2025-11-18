@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/presentation/screens/home_screen.dart';
+import 'package:provider/provider.dart';
 
-import 'screens/home_screen.dart';
+import 'core/di/dependency_injector.dart';
+import 'logic/filter_provider.dart';
+import 'logic/tab_index_provider.dart';
 
 void main() {
-  runApp(const NewsAPIApp());
+  setupDependencyInjector();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => FilterProvider()),
+        ChangeNotifierProvider(create: (_) => TabIndexProvider()),
+      ],
+      child: const NewsAPIApp(),
+    ),
+  );
 }
 
 class NewsAPIApp extends StatelessWidget {

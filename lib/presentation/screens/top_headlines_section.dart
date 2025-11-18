@@ -1,0 +1,65 @@
+import 'package:flutter/material.dart';
+import 'package:news_app/core/di/dependency_injector.dart';
+import 'package:provider/provider.dart';
+
+import '../../logic/articles_provider.dart';
+import '../../logic/filter_provider.dart';
+import '../widgets/article_card.dart';
+
+class TopHeadlinesSection extends StatefulWidget {
+  const TopHeadlinesSection({super.key});
+
+  @override
+  State<TopHeadlinesSection> createState() => _TopHeadlinesSectionState();
+}
+
+class _TopHeadlinesSectionState extends State<TopHeadlinesSection> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    final filterOptions = context.watch<FilterProvider>();
+    return ChangeNotifierProvider(
+      create: (context) => di<ArticlesProvider>()..listenToFilterOptions(filterOptions, '/top-headlines', filterOptions.currentTopHeadlinesFilters),
+      child: Consumer<ArticlesProvider>(
+        builder: (context, articlesProvider, _) {
+          return Scaffold(
+            body: Column(
+              children: [
+                // Results Info
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  color: Colors.white,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Total Results: ${articlesProvider.articlesCount}', style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                      if (filterOptions.searchQuery.isNotEmpty)
+                        Text('Searching for "${filterOptions.searchQuery}"', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: articlesProvider.result == null
+                        ? Center(child: const CircularProgressIndicator.adaptive())
+                        : articlesProvider.result!.fold(
+                            (err) => Center(child: Text('Error: ${err.message}', textAlign: TextAlign.center)),
+                            (articles) => ListView.builder(
+                              padding: const EdgeInsets.all(16),
+                              itemCount: articles.length,
+                              itemBuilder: (context, index) => ArticleCard(articles[index]),
+                            ),
+                          ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/core/extensions/string.dart';
 
-import '../utils/constants.dart';
-import '../utils/date_utils.dart' as app_date_utils;
+import '../../core/utils/constants.dart';
+import '../../core/utils/date_utils.dart' as app_date_utils;
 
 class FilterBottomSheet extends StatefulWidget {
   final bool isEverything;
-  final String sortBy;
+  final SortOption sortBy;
   final Country selectedCountry;
   final Category? selectedCategory;
   final DateTime? fromDate;
   final DateTime? toDate;
-  final Function(String, Country, Category?, DateTime?, DateTime?) onApply;
+  final Function(SortOption, Country, Category?, DateTime?, DateTime?) onApply;
 
   const FilterBottomSheet({
     super.key,
@@ -28,7 +29,7 @@ class FilterBottomSheet extends StatefulWidget {
 }
 
 class _FilterBottomSheetState extends State<FilterBottomSheet> {
-  late String _sortBy;
+  late SortOption _sortBy;
   late Country _selectedCountry;
   Category? _selectedCategory;
   DateTime? _fromDate;
@@ -99,11 +100,11 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               borderRadius: BorderRadius.circular(8),
             ),
             child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
+              child: DropdownButton<SortOption>(
                 value: _sortBy,
                 isExpanded: true,
                 items: SortOption.values.map((option) {
-                  return DropdownMenuItem<String>(value: option.name, child: Text(option.label));
+                  return DropdownMenuItem<SortOption>(value: option, child: Text(option.label));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -177,7 +178,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      category.name,
+                      category.name.capitalized,
                       style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: isSelected ? Colors.white : Colors.black87),
                     ),
                   ),

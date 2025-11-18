@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../models/article.dart';
-import '../utils/date_utils.dart' as app_date_utils;
+import '../../core/utils/date_utils.dart' as app_date_utils;
+import '../../data/models/article.dart';
 
 class ArticleCard extends StatelessWidget {
   final Article article;
 
-  const ArticleCard({super.key, required this.article});
+  const ArticleCard(this.article, {super.key});
 
   Future<void> _launchUrl(String url) async {
     final Uri uri = Uri.parse(url);

@@ -43,7 +43,9 @@ dependencies:
   dartz: ^0.10.1
 
   # State management (optional, can use Provider or Riverpod)
-  # provider: ^6.1.1
+  provider: ^6.1.5
+  equatable: ^2.0.7
+  get_it: ^9.0.5
 
 dev_dependencies:
   flutter_test:
