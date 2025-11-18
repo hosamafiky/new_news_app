@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,18 +30,21 @@ class ArticleCard extends StatelessWidget {
           if (article.urlToImage != null)
             ClipRRect(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              child: Image.network(
-                article.urlToImage!,
+              child: CachedNetworkImage(
+                imageUrl: article.urlToImage!,
                 height: 200,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    height: 200,
-                    color: Colors.grey[300],
-                    child: const Center(child: Icon(Icons.image_not_supported, size: 50, color: Colors.grey)),
-                  );
-                },
+                placeholder: (context, url) => Container(
+                  height: 200,
+                  color: Colors.grey[300],
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  height: 200,
+                  color: Colors.grey[300],
+                  child: const Center(child: Icon(Icons.image_not_supported, size: 50, color: Colors.grey)),
+                ),
               ),
             ),
 

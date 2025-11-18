@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:news_app/core/di/dependency_injector.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/news/news_repository.dart';
 import '../../logic/articles_provider.dart';
 import '../../logic/filter_provider.dart';
+import '../../logic/tab_index_provider.dart';
 import '../widgets/article_card.dart';
 
 class TopHeadlinesSection extends StatefulWidget {
@@ -21,9 +23,10 @@ class _TopHeadlinesSectionState extends State<TopHeadlinesSection> with Automati
   Widget build(BuildContext context) {
     super.build(context);
     final filterOptions = context.watch<FilterProvider>();
+    final tabIndexProvider = context.watch<TabIndexProvider>();
     return ChangeNotifierProvider(
-      create: (context) => di<ArticlesProvider>()..listenToFilterOptions(filterOptions, '/top-headlines', filterOptions.currentTopHeadlinesFilters),
-      child: Consumer<ArticlesProvider>(
+      create: (context) => TopHeadlinesProvider(di<NewsRepository>())..listenToFilterOptions(tabIndexProvider, filterOptions),
+      child: Consumer<TopHeadlinesProvider>(
         builder: (context, articlesProvider, _) {
           return Scaffold(
             body: Column(

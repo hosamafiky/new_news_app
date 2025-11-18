@@ -26,7 +26,7 @@ class FilterProvider extends ChangeNotifier {
       if (_fromDate != null) 'from': app_date_utils.DateUtils.toApiDateFormat(_fromDate!),
       if (_toDate != null) 'to': app_date_utils.DateUtils.toApiDateFormat(_toDate!),
       'language': 'en',
-      'pageSize': 20,
+      'pageSize': 2,
       'page': _page,
     };
   }
@@ -36,8 +36,9 @@ class FilterProvider extends ChangeNotifier {
       'country': _selectedCountry.code,
       if (_selectedCategory != null) 'category': _selectedCategory!.name,
       'q': _searchQuery,
-      'pageSize': 20,
+      'pageSize': 2,
       'page': _page,
+      'sortBy': selectedSortOption.name,
     };
   }
 

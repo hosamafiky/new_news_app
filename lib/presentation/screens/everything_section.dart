@@ -4,7 +4,9 @@ import 'package:news_app/logic/filter_provider.dart';
 import 'package:news_app/presentation/widgets/article_card.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/news/news_repository.dart';
 import '../../logic/articles_provider.dart';
+import '../../logic/tab_index_provider.dart';
 
 class EverythingSection extends StatefulWidget {
   const EverythingSection({super.key});
@@ -16,13 +18,15 @@ class EverythingSection extends StatefulWidget {
 class _EverythingSectionState extends State<EverythingSection> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final filterOptions = context.watch<FilterProvider>();
+    final tabIndexProvider = context.watch<TabIndexProvider>();
     return ChangeNotifierProvider(
-      create: (context) => di<ArticlesProvider>()..listenToFilterOptions(filterOptions, '/everything', filterOptions.currentEveryThingFilters),
-      child: Consumer<ArticlesProvider>(
+      create: (context) => EverythingProvider(di<NewsRepository>())..listenToFilterOptions(tabIndexProvider, filterOptions),
+      child: Consumer<EverythingProvider>(
         builder: (context, articlesProvider, _) {
           return Scaffold(
             body: Column(

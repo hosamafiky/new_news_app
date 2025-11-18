@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:news_app/presentation/screens/everything_section.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/extensions/string.dart';
+import '../../core/utils/constants.dart';
 import '../../logic/filter_provider.dart';
 import '../../logic/tab_index_provider.dart';
 import '../widgets/filter_bottom_sheet.dart';
@@ -57,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     final filterOptions = context.watch<FilterProvider>();
+    final tabIndex = context.watch<TabIndexProvider>();
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -75,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             ),
           ],
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(120),
+            preferredSize: Size.fromHeight(tabIndex.currentIndex == 1 ? 150 : 120),
             child: Column(
               children: [
                 // Search Bar
@@ -104,7 +107,28 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     onSubmitted: (_) => filterOptions.updateSearchQuery(_searchController.text.isNotEmpty ? _searchController.text : null),
                   ),
                 ),
-
+                if (tabIndex.currentIndex == 1)
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      children: Category.values.map((category) {
+                        final isSelected = filterOptions.selectedCategory == category;
+                        return GestureDetector(
+                          onTap: () {
+                            if (isSelected) return;
+                            filterOptions.updateCategory(category);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(color: isSelected ? Colors.blue : const Color(0xFFE5E7EB), borderRadius: BorderRadius.circular(20)),
+                            child: Text(category.name.capitalized, style: TextStyle(color: isSelected ? Colors.white : Colors.black, fontSize: 12)),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 // Tab Bar
                 TabBar(
                   controller: _tabController,
