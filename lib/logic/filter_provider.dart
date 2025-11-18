@@ -68,10 +68,9 @@ class FilterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void applyFilters({required SortOption sortOption, required Country country, Category? category, DateTime? from, DateTime? to}) {
+  void applyFilters({required SortOption sortOption, required Country country, DateTime? from, DateTime? to}) {
     _selectedSortOption = sortOption;
     _selectedCountry = country;
-    _selectedCategory = category;
     _fromDate = from;
     _toDate = to;
     notifyListeners();

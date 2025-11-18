@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/core/extensions/string.dart';
 
 import '../../core/utils/constants.dart';
 import '../../core/utils/date_utils.dart' as app_date_utils;
@@ -8,17 +7,15 @@ class FilterBottomSheet extends StatefulWidget {
   final bool isEverything;
   final SortOption sortBy;
   final Country selectedCountry;
-  final Category? selectedCategory;
   final DateTime? fromDate;
   final DateTime? toDate;
-  final Function(SortOption, Country, Category?, DateTime?, DateTime?) onApply;
+  final Function(SortOption, Country, DateTime?, DateTime?) onApply;
 
   const FilterBottomSheet({
     super.key,
     required this.isEverything,
     required this.sortBy,
     required this.selectedCountry,
-    required this.selectedCategory,
     required this.fromDate,
     required this.toDate,
     required this.onApply,
@@ -31,7 +28,6 @@ class FilterBottomSheet extends StatefulWidget {
 class _FilterBottomSheetState extends State<FilterBottomSheet> {
   late SortOption _sortBy;
   late Country _selectedCountry;
-  Category? _selectedCategory;
   DateTime? _fromDate;
   DateTime? _toDate;
 
@@ -40,7 +36,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     super.initState();
     _sortBy = widget.sortBy;
     _selectedCountry = widget.selectedCountry;
-    _selectedCategory = widget.selectedCategory;
     _fromDate = widget.fromDate;
     _toDate = widget.toDate;
   }
@@ -152,40 +147,6 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Category
-            const Text(
-              'Category',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black87),
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: Category.values.map((category) {
-                final isSelected = _selectedCategory == category;
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _selectedCategory = isSelected ? null : category;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: isSelected ? Colors.blue : Colors.white,
-                      border: Border.all(color: isSelected ? Colors.blue : Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      category.name.capitalized,
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: isSelected ? Colors.white : Colors.black87),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 20),
           ],
 
           // Date Range (for Everything only)
@@ -246,7 +207,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                widget.onApply(_sortBy, _selectedCountry, _selectedCategory, _fromDate, _toDate);
+                widget.onApply(_sortBy, _selectedCountry, _fromDate, _toDate);
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(

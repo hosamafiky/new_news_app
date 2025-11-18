@@ -45,11 +45,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         isEverything: _tabController.index == 0,
         sortBy: filterOptions.selectedSortOption,
         selectedCountry: filterOptions.selectedCountry,
-        selectedCategory: filterOptions.selectedCategory,
         fromDate: filterOptions.fromDate,
         toDate: filterOptions.toDate,
-        onApply: (sortBy, country, category, fromDate, toDate) {
-          filterOptions.applyFilters(sortOption: sortBy, country: country, category: category, from: fromDate, to: toDate);
+        onApply: (sortBy, country, fromDate, toDate) {
+          filterOptions.applyFilters(sortOption: sortBy, country: country, from: fromDate, to: toDate);
           // _loadArticles();
         },
       ),
